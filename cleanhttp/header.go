@@ -48,7 +48,7 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 	h := &HeaderBuilder{
 		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="8", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
 		SecChUaPlatform: fmt.Sprintf(`"%s"`, ua.OSName), // need to fix with apple
-		SecChUaMobile:   "?0",                           // todo,
+		SecChUaMobile:   "?0",                           // todo -> c.Config.BrowserFp.Navigator.Platform,
 		AcceptLanguage:  GenerateAcceptLanguageHeader(c.Config.BrowserFp.Navigator.Languages),
 		Cookies:         c.FormatCookies(),
 		UaInfo:          *ua,

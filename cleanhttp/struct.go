@@ -1,15 +1,17 @@
 package cleanhttp
 
 import (
-	"github.com/Implex-ltd/cleanhttp/internal/cyclepls"
+	"io"
+
 	fp "github.com/Implex-ltd/fingerprint-client/fpclient"
 	http "github.com/bogdanfinn/fhttp"
+	tls_client "github.com/bogdanfinn/tls-client"
 )
 
 type CleanHttp struct {
 	Config     *Config
-	TlsClient  cyclepls.CyclePLS
-	Cookies    []*cyclepls.Cookie
+	Client     tls_client.HttpClient
+	Cookies    []*http.Cookie
 	BaseHeader *HeaderBuilder
 }
 
@@ -23,7 +25,7 @@ type Config struct {
 type RequestOption struct {
 	Ja3                    string
 	Method                 string
-	Body                   []byte
+	Body                   io.Reader
 	Url                    string
 	Header                 http.Header
 	CalculateContentLength bool

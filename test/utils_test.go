@@ -40,7 +40,6 @@ func TestCalculateContentLength(t *testing.T) {
 	}
 }
 
-
 func TestImageToBase64(t *testing.T) {
 	type args struct {
 		filePath string

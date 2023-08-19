@@ -2,6 +2,8 @@ package cleanhttp
 
 import (
 	"fmt"
+	"io"
+	"strings"
 	"testing"
 
 	"github.com/Implex-ltd/cleanhttp/cleanhttp"
@@ -25,7 +27,7 @@ func TestNewCleanHttpClient(t *testing.T) {
 		config *cleanhttp.Config
 		url    string
 		method string
-		body   string
+		body   io.Reader
 	}
 	tests := []struct {
 		name    string
@@ -38,7 +40,7 @@ func TestNewCleanHttpClient(t *testing.T) {
 			args: args{
 				config: cfg,
 				method: "GET",
-				body:   "",
+				body:   strings.NewReader(``),
 				url:    "https://tls.peet.ws/api/all",
 			},
 		},
@@ -56,7 +58,7 @@ func TestNewCleanHttpClient(t *testing.T) {
 				Method: tt.args.method,
 				Url:    tt.args.url,
 				Header: c.GetDefaultHeader(),
-				Body:   []byte(tt.args.body),
+				Body:   tt.args.body,
 			})
 
 			if err != nil {
@@ -65,11 +67,11 @@ func TestNewCleanHttpClient(t *testing.T) {
 
 			fmt.Println(resp.Body)
 
-			resp2, err := c.DoTls(cleanhttp.RequestOption{
+			resp2, err := c.Do(cleanhttp.RequestOption{
 				Method: tt.args.method,
 				Url:    tt.args.url,
 				Header: c.GetDefaultHeader(),
-				Body:   []byte(tt.args.body),
+				Body:   tt.args.body,
 			})
 
 			if err != nil {

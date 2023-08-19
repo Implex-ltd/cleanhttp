@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/Implex-ltd/cleanhttp/cleanhttp"
 	"github.com/Implex-ltd/fingerprint-client/fpclient"
@@ -86,6 +87,13 @@ func main() {
 		panic(err)
 	}
 
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
 	// Exact same TLS as chrome 114 !
-	fmt.Println(string(resp.Body))
+	fmt.Println(string(data))
 }
