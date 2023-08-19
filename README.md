@@ -12,5 +12,5 @@ go get -u github.com/Implex-ltd/cleanhttp/cleanhttp
 $env:GOPRIVATE="github.com/Implex-ltd/"
 $env:GOSUMDB="off"
 go clean -modcache
-export GOPRIVATE=github.com/Implex-ltd/cleanhttp/cleanhttp
+set GOPRIVATE=github.com/Implex-ltd/cleanhttp/cleanhttp
 ```
