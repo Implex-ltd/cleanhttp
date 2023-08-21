@@ -46,7 +46,7 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 	ua := ParseUserAgent(c.Config.BrowserFp.Navigator.UserAgent)
 
 	h := &HeaderBuilder{
-		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="8", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
+		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="24", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
 		SecChUaPlatform: fmt.Sprintf(`"%s"`, ua.OSName), // need to fix with apple
 		SecChUaMobile:   "?0",                           // todo -> c.Config.BrowserFp.Navigator.Platform,
 		AcceptLanguage:  GenerateAcceptLanguageHeader(c.Config.BrowserFp.Navigator.Languages),
@@ -59,16 +59,16 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 
 func (c *CleanHttp) GetDefaultHeader() http.Header {
 	return http.Header{
-		"cache-control":             {`max-age=0`},
+		//"cache-control":             {`max-age=0`},
 		"sec-ch-ua":                 {c.BaseHeader.SecChUa},
 		"sec-ch-ua-mobile":          {c.BaseHeader.SecChUaMobile},
 		"sec-ch-ua-platform":        {c.BaseHeader.SecChUaPlatform},
-		"upgrade-insecure-requests": {`1`},
+		//"upgrade-insecure-requests": {`1`},
 		"user-agent":                {c.Config.BrowserFp.Navigator.UserAgent},
-		"accept":                    {`text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng;q=0.8,application/signed-exchange;v=b3;q=0.7`},
+		//"accept":                    {`text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng;q=0.8,application/signed-exchange;v=b3;q=0.7`},
 		"sec-fetch-site":            {`none`},
 		"sec-fetch-mode":            {`navigate`},
-		"sec-fetch-user":            {`?1`},
+		"sec-fetch-user":            {`?0`},
 		"sec-fetch-dest":            {`document`},
 		"accept-encoding":           {`gzip, deflate, br`},
 		"accept-language":           {c.BaseHeader.AcceptLanguage},

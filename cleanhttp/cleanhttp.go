@@ -1,9 +1,11 @@
 package cleanhttp
 
 import (
-	http "github.com/bogdanfinn/fhttp"
+	"fmt"
 	"net/url"
 	"strings"
+
+	http "github.com/bogdanfinn/fhttp"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 )
@@ -52,10 +54,12 @@ func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
 	}
 
 	for k, v := range request.Header {
-		req.Header.Add(k, v[0])
+		req.Header.Set(k, v[0])
 	}
 
 	req.Header.Add("cookie", c.FormatCookies())
+
+	fmt.Println(req.Header)
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
