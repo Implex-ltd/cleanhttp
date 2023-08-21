@@ -78,8 +78,13 @@ func TestNewCleanHttpClient(t *testing.T) {
 				panic(err)
 			}
 
-			fmt.Println(resp2.Body)
+			body, err := io.ReadAll(resp2.Body)
 
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Println(string(body))
 			fmt.Println("=======================================")
 		})
 	}

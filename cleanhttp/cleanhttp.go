@@ -18,6 +18,7 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 		tls_client.WithClientProfile(GetTlsProfile()),
 		tls_client.WithInsecureSkipVerify(),
 		tls_client.WithCookieJar(tls_client.NewCookieJar()),
+		tls_client.WithRandomTLSExtensionOrder(),
 	}
 
 	if config.Proxy != "" {

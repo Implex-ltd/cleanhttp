@@ -70,7 +70,9 @@ func GetTlsProfile() tls_client.ClientProfile {
 				&tls.SupportedPointsExtension{SupportedPoints: []byte{
 					0,
 				}},
-				&tls.SessionTicketExtension{},
+				&tls.SessionTicketExtension{
+					
+				},
 				&tls.ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
 				&tls.StatusRequestExtension{},
 				&tls.SignatureAlgorithmsExtension{SupportedSignatureAlgorithms: []tls.SignatureScheme{
