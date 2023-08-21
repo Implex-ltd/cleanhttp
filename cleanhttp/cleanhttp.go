@@ -1,7 +1,6 @@
 package cleanhttp
 
 import (
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -58,8 +57,6 @@ func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
 	}
 
 	req.Header.Add("cookie", c.FormatCookies())
-
-	fmt.Println(req.Header)
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
