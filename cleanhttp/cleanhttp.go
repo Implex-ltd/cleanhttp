@@ -15,8 +15,12 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 		config.Timeout = 30
 	}
 
+	if config.Profil == nil {
+		config.Profil = GetTlsProfile()
+	}
+
 	options := []tls_client.HttpClientOption{
-		tls_client.WithClientProfile(tls_client.Chrome_112), //(GetTlsProfile()),
+		tls_client.WithClientProfile(*config.Profil),
 		tls_client.WithInsecureSkipVerify(),
 		tls_client.WithCookieJar(tls_client.NewCookieJar()),
 		tls_client.WithRandomTLSExtensionOrder(),
@@ -56,62 +60,19 @@ func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
 		req.Header.Set(k, v[0])
 	}
 
-	req.Header.Add("cookie", c.FormatCookies())
-
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
-	if _, ok := resp.Header["Set-Cookie"]; ok {
-		setCookieHeader := resp.Header["Set-Cookie"][0]
-		cookies := c.ParseSetCookieHeader(setCookieHeader)
-
-		for _, cookie := range cookies {
-			c.Cookies = append(c.Cookies, &http.Cookie{
-				Name:  cookie.Name,
-				Value: cookie.Value,
-			})
-		}
-	}
-
 	return resp, nil
 }
 
-func (c *CleanHttp) ParseSetCookieHeader(header string) []http.Cookie {
-	rawCookies := strings.Split(header, ",")
-	var cookies []http.Cookie
-
-	for _, rawCookie := range rawCookies {
-		cookieParts := strings.Split(rawCookie, ";")
-		cookieNameValue := strings.SplitN(cookieParts[0], "=", 2)
-
-		if len(cookieNameValue) == 2 {
-			a, _ := url.QueryUnescape(cookieNameValue[0])
-			name := strings.ReplaceAll(strings.TrimSpace(a), "/", "")
-
-			b, _ := url.QueryUnescape(cookieNameValue[1])
-			value := strings.TrimSpace(b)
-
-			if name != "" && value != "" {
-				cookie := http.Cookie{
-					Name:  name,
-					Value: value,
-				}
-				cookies = append(cookies, cookie)
-			}
-		}
-	}
-	return cookies
-}
-
 // FormatCookies takes all cookies from the client and returns them as a header format string.
-func (c *CleanHttp) FormatCookies() string {
-	// Default lib use cookiejar..
-
+func (c *CleanHttp) FormatCookies(url *url.URL) string {
 	var builder strings.Builder
 
-	for i, cookie := range c.Cookies {
+	for i, cookie := range c.Client.GetCookieJar().Cookies(url) {
 		builder.WriteString(cookie.Name)
 		builder.WriteString("=")
 		builder.WriteString(cookie.Value)

@@ -7,7 +7,7 @@ import (
 )
 
 // Chrome 114 exact browser TLS.
-func GetTlsProfile() tls_client.ClientProfile {
+func GetTlsProfile() *tls_client.ClientProfile {
 	settings := map[http2.SettingID]uint32{
 		http2.SettingHeaderTableSize:      65536,
 		http2.SettingMaxConcurrentStreams: 1000,
@@ -115,5 +115,5 @@ func GetTlsProfile() tls_client.ClientProfile {
 		SpecFactory: specFactory,
 	}, settings, settingsOrder, pseudoHeaderOrder, connectionFlow, nil, nil)
 
-	return customClientProfile
+	return &customClientProfile
 }

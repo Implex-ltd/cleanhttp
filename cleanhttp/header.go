@@ -50,7 +50,7 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 		SecChUaPlatform: fmt.Sprintf(`"%s"`, ua.OSName), // need to fix with apple
 		SecChUaMobile:   "?0",                           // todo -> c.Config.BrowserFp.Navigator.Platform,
 		AcceptLanguage:  GenerateAcceptLanguageHeader(c.Config.BrowserFp.Navigator.Languages),
-		Cookies:         c.FormatCookies(),
+		//Cookies:         c.FormatCookies(),
 		UaInfo:          *ua,
 	}
 
@@ -72,7 +72,7 @@ func (c *CleanHttp) GetDefaultHeader() http.Header {
 		"sec-fetch-dest":            {`document`},
 		"accept-encoding":           {`gzip, deflate, br`},
 		"accept-language":           {c.BaseHeader.AcceptLanguage},
-		"cookie":                    {c.FormatCookies()},
+		//"cookie":                    {c.FormatCookies()},
 
 		http.HeaderOrderKey: {
 			"cache-control",

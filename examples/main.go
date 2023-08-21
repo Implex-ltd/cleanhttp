@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io"
+	"net/url"
 
 	"github.com/Implex-ltd/cleanhttp/cleanhttp"
 	"github.com/Implex-ltd/fingerprint-client/fpclient"
@@ -44,7 +44,7 @@ func main() {
 
 	resp, err := c.Do(cleanhttp.RequestOption{
 		Method: "GET", // GET, POST, PUT, PATCH, DELETE
-		Url:    "https://tls.peet.ws/api/all",
+		Url:    "https://discord.com/api/v9/experiments",
 		Header: http.Header{
 			`accept`:             {`*/*`},
 			`accept-encoding`:    {`gzip, deflate, br`},
@@ -88,12 +88,18 @@ func main() {
 	}
 
 	defer resp.Body.Close()
+	/*
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+	*/
 
-	data, err := io.ReadAll(resp.Body)
+	url, err := url.Parse("https://discord.com")
 	if err != nil {
 		panic(err)
 	}
 
 	// Exact same TLS as chrome 114 !
-	fmt.Println(string(data))
+	fmt.Println(c.FormatCookies(url))
 }

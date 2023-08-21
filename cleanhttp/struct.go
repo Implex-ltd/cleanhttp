@@ -20,6 +20,8 @@ type Config struct {
 	Timeout   int
 	BrowserFp *fp.Fingerprint
 	TlsFp     *fp.TlsFingerprint
+
+	Profil *tls_client.ClientProfile
 }
 
 type RequestOption struct {
