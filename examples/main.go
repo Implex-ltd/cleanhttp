@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/url"
+	"io"
+	"strings"
 
 	"github.com/Implex-ltd/cleanhttp/cleanhttp"
 	"github.com/Implex-ltd/fingerprint-client/fpclient"
@@ -88,18 +89,60 @@ func main() {
 	}
 
 	defer resp.Body.Close()
-	/*
-		data, err := io.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
-	*/
 
-	url, err := url.Parse("https://discord.com")
+	// Exact same TLS as chrome 114 !
+	resp, err = c.Do(cleanhttp.RequestOption{
+		Method: "POST", // GET, POST, PUT, PATCH, DELETE
+		Url:    "https://discord.com/api/v9/track/ott",
+		Header: http.Header{
+			`accept`:             {`*/*`},
+			`accept-encoding`:    {`gzip, deflate, br`},
+			`accept-language`:    {base.AcceptLanguage},
+			`content-type`:       {`application/json`},
+			`cookie`:             {base.Cookies},
+			`origin`:             {`https://google.com`},
+			`referer`:            {`https://google.com`},
+			`sec-ch-ua`:          {base.SecChUa},
+			`sec-ch-ua-mobile`:   {`?0`},
+			`sec-ch-ua-platform`: {base.SecChUaPlatform},
+			`sec-fetch-dest`:     {`empty`},
+			`sec-fetch-mode`:     {`cors`},
+			`sec-fetch-site`:     {`same-origin`},
+			`user-agent`:         {c.Config.BrowserFp.Navigator.UserAgent},
+
+			// Keep your headers in the right order.
+			http.HeaderOrderKey: {
+				`authority`,
+				`accept`,
+				`accept-encoding`,
+				`accept-language`,
+				`content-type`,
+				`cookie`,
+				`origin`,
+				`referer`,
+				`sec-ch-ua`,
+				`sec-ch-ua-mobile`,
+				`sec-ch-ua-platform`,
+				`sec-fetch-dest`,
+				`sec-fetch-mode`,
+				`sec-fetch-site`,
+				`user-agent`,
+			},
+		},
+		Body: strings.NewReader(`{"type":"landing"}`),
+	})
 	if err != nil {
 		panic(err)
 	}
 
-	// Exact same TLS as chrome 114 !
-	fmt.Println(c.FormatCookies(url))
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	// cookies have been set.
+	fmt.Println(resp.Request.Header)
+	fmt.Println(string(data))
 }

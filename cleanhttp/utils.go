@@ -3,13 +3,13 @@ package cleanhttp
 import (
 	"encoding/base64"
 	"io"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
 // Convert file image and return it as base64 string to use it in request.
 func ImageToBase64(filePath string) (string, error) {
-	imageData, err := ioutil.ReadFile(filePath)
+	imageData, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
 	}
@@ -39,7 +39,7 @@ func CalculateContentLength(reader io.Reader) (int64, error) {
 		return contentLength, nil
 	}
 
-	content, err := ioutil.ReadAll(reader)
+	content, err := io.ReadAll(reader)
 	if err != nil {
 		return 0, err
 	}

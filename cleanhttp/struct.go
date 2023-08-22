@@ -11,7 +11,6 @@ import (
 type CleanHttp struct {
 	Config     *Config
 	Client     tls_client.HttpClient
-	Cookies    []*http.Cookie
 	BaseHeader *HeaderBuilder
 }
 

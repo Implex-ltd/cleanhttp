@@ -1,8 +1,7 @@
 package cleanhttp
 
 import (
-	"net/url"
-	"strings"
+	"errors"
 
 	http "github.com/bogdanfinn/fhttp"
 
@@ -36,9 +35,8 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 	}
 
 	c := CleanHttp{
-		Cookies: nil,
-		Config:  config,
-		Client:  client,
+		Config: config,
+		Client: client,
 	}
 
 	c.BaseHeader = c.GenerateBaseHeaders()
@@ -47,6 +45,10 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 }
 
 func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
+	if request.Url == "" {
+		return nil, errors.New("please provide valid url")
+	}
+
 	if request.Header == nil {
 		request.Header = c.GetDefaultHeader()
 	}
@@ -66,21 +68,4 @@ func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
 	}
 
 	return resp, nil
-}
-
-// FormatCookies takes all cookies from the client and returns them as a header format string.
-func (c *CleanHttp) FormatCookies(url *url.URL) string {
-	var builder strings.Builder
-
-	for i, cookie := range c.Client.GetCookieJar().Cookies(url) {
-		builder.WriteString(cookie.Name)
-		builder.WriteString("=")
-		builder.WriteString(cookie.Value)
-
-		if i != len(c.Cookies)-1 {
-			builder.WriteString("; ")
-		}
-	}
-
-	return builder.String()
 }
