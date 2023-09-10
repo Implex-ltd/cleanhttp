@@ -45,10 +45,19 @@ func ParseUserAgent(userAgentString string) *UserAgentInfo {
 func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 	ua := ParseUserAgent(c.Config.BrowserFp.Navigator.UserAgent)
 
+	platform := ""
+	if strings.Contains(c.Config.BrowserFp.Navigator.UserAgent, "Windows") {
+		platform = "Windows"
+	} else if strings.Contains(c.Config.BrowserFp.Navigator.UserAgent, "Macintosh") {
+		platform = "macOS"
+	} else {
+		platform = "Linux"
+	}
+
 	h := &HeaderBuilder{
 		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="99", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
-		SecChUaPlatform: fmt.Sprintf(`"%s"`, ua.OSName), // need to fix with apple
-		SecChUaMobile:   "?0",                           // todo -> c.Config.BrowserFp.Navigator.Platform,
+		SecChUaPlatform: fmt.Sprintf(`"%s"`, platform),
+		SecChUaMobile:   "?0", // todo -> c.Config.BrowserFp.Navigator.Platform,
 		AcceptLanguage:  GenerateAcceptLanguageHeader(c.Config.BrowserFp.Navigator.Languages),
 		//Cookies:         c.FormatCookies(),
 		UaInfo: *ua,
