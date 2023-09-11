@@ -12,11 +12,13 @@ type CleanHttp struct {
 	Config     *Config
 	Client     tls_client.HttpClient
 	BaseHeader *HeaderBuilder
+	Log        bool
 }
 
 type Config struct {
 	Proxy     string
 	Timeout   int
+	Log       bool
 	BrowserFp *fp.Fingerprint
 	TlsFp     *fp.TlsFingerprint
 
@@ -45,6 +47,5 @@ type HeaderBuilder struct {
 	SecChUaPlatform string
 	SecChUaMobile   string
 	AcceptLanguage  string
-	Cookies         string
 	UaInfo          UserAgentInfo
 }

@@ -2,6 +2,7 @@ package cleanhttp
 
 import (
 	"errors"
+	"log"
 	"net/url"
 
 	http "github.com/bogdanfinn/fhttp"
@@ -38,6 +39,7 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 	c := CleanHttp{
 		Config: config,
 		Client: client,
+		Log:    config.Log,
 	}
 
 	c.BaseHeader = c.GenerateBaseHeaders()
@@ -66,6 +68,14 @@ func (c *CleanHttp) Do(request RequestOption) (*http.Response, error) {
 	u, _ := url.Parse(request.Url)
 	for _, cook := range c.Client.GetCookieJar().Cookies(u) {
 		req.AddCookie(cook)
+
+		if c.Log {
+			log.Println("add cookie", cook.Name, cook.Value, cook.Domain)
+		}
+	}
+
+	if c.Log {
+		log.Println(req.URL, req.Header, req.Body)
 	}
 
 	resp, err := c.Client.Do(req)

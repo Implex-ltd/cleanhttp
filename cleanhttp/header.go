@@ -55,12 +55,11 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 	}
 
 	h := &HeaderBuilder{
-		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="99", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
+		SecChUa:         fmt.Sprintf(`"Not.A/Brand";v="24", "Chromium";v="%s", "Google Chrome";v="%s"`, ua.UaVersion, ua.UaVersion),
 		SecChUaPlatform: fmt.Sprintf(`"%s"`, platform),
 		SecChUaMobile:   "?0", // todo -> c.Config.BrowserFp.Navigator.Platform,
 		AcceptLanguage:  GenerateAcceptLanguageHeader(c.Config.BrowserFp.Navigator.Languages),
-		//Cookies:         c.FormatCookies(),
-		UaInfo: *ua,
+		UaInfo:          *ua,
 	}
 
 	return h
@@ -68,20 +67,16 @@ func (c *CleanHttp) GenerateBaseHeaders() *HeaderBuilder {
 
 func (c *CleanHttp) GetDefaultHeader() http.Header {
 	return http.Header{
-		//"cache-control":             {`max-age=0`},
 		"sec-ch-ua":          {c.BaseHeader.SecChUa},
 		"sec-ch-ua-mobile":   {c.BaseHeader.SecChUaMobile},
 		"sec-ch-ua-platform": {c.BaseHeader.SecChUaPlatform},
-		//"upgrade-insecure-requests": {`1`},
-		"user-agent": {c.Config.BrowserFp.Navigator.UserAgent},
-		//"accept":                    {`text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng;q=0.8,application/signed-exchange;v=b3;q=0.7`},
-		"sec-fetch-site":  {`none`},
-		"sec-fetch-mode":  {`navigate`},
-		"sec-fetch-user":  {`?0`},
-		"sec-fetch-dest":  {`document`},
-		"accept-encoding": {`gzip, deflate, br`},
-		"accept-language": {c.BaseHeader.AcceptLanguage},
-		//"cookie":                    {c.FormatCookies()},
+		"user-agent":         {c.Config.BrowserFp.Navigator.UserAgent},
+		"sec-fetch-site":     {`none`},
+		"sec-fetch-mode":     {`navigate`},
+		"sec-fetch-user":     {`?0`},
+		"sec-fetch-dest":     {`document`},
+		"accept-encoding":    {`gzip, deflate, br`},
+		"accept-language":    {c.BaseHeader.AcceptLanguage},
 
 		http.HeaderOrderKey: {
 			"cache-control",
