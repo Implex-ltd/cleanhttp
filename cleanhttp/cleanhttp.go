@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	http "github.com/bogdanfinn/fhttp"
+	"github.com/bogdanfinn/tls-client/profiles"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 )
@@ -16,12 +17,8 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 		config.Timeout = 30
 	}
 
-	if config.Profil == nil {
-		config.Profil = GetTlsProfile()
-	}
-
 	options := []tls_client.HttpClientOption{
-		tls_client.WithClientProfile(*config.Profil),
+		tls_client.WithClientProfile(profiles.Chrome_117),
 		tls_client.WithInsecureSkipVerify(),
 		tls_client.WithCookieJar(tls_client.NewCookieJar()),
 		tls_client.WithRandomTLSExtensionOrder(),
