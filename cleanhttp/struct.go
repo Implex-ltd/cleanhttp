@@ -6,11 +6,19 @@ import (
 	fp "github.com/Implex-ltd/fingerprint-client/fpclient"
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
+	"github.com/valyala/fasthttp"
 )
 
 type CleanHttp struct {
 	Config     *Config
 	Client     tls_client.HttpClient
+	BaseHeader *HeaderBuilder
+	Log        bool
+}
+
+type FastCleanHttp struct {
+	Config     *Config
+	Client     *fasthttp.Client
 	BaseHeader *HeaderBuilder
 	Log        bool
 }
