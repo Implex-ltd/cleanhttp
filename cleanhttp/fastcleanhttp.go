@@ -3,6 +3,7 @@ package cleanhttp
 import (
 	"errors"
 	"io"
+	"strings"
 	"time"
 
 	"github.com/valyala/fasthttp"
@@ -15,17 +16,23 @@ func NewFastCleanHttpClient(config *Config) (*FastCleanHttp, error) {
 		config.Timeout = 30
 	}
 
-	readTimeout, _ := time.ParseDuration("5s")
-	writeTimeout, _ := time.ParseDuration("5s")
-	maxIdleConnDuration, _ := time.ParseDuration("1h")
 	client := &fasthttp.Client{
-		ReadTimeout:                   readTimeout,
-		WriteTimeout:                  writeTimeout,
-		MaxIdleConnDuration:           maxIdleConnDuration,
+		ReadTimeout:                   config.ReadTimeout,
+		WriteTimeout:                  config.WriteTimeout,
+		MaxIdleConnDuration:           config.MaxIdleConnDuration,
 		NoDefaultUserAgentHeader:      true,
 		DisableHeaderNamesNormalizing: true,
 		DisablePathNormalizing:        true,
-		Dial:                          fasthttpproxy.FasthttpHTTPDialer(config.Proxy),
+	}
+
+	if config.Proxy != "" {
+		config.Proxy = strings.ReplaceAll(config.Proxy, "http://", "")
+		client.Dial = fasthttpproxy.FasthttpHTTPDialer(config.Proxy)
+	} else {
+		client.Dial = (&fasthttp.TCPDialer{
+			Concurrency:      4096,
+			DNSCacheDuration: time.Hour,
+		}).Dial
 	}
 
 	c := FastCleanHttp{

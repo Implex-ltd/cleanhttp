@@ -2,6 +2,7 @@ package cleanhttp
 
 import (
 	"io"
+	"time"
 
 	fp "github.com/Implex-ltd/fingerprint-client/fpclient"
 	http "github.com/bogdanfinn/fhttp"
@@ -28,6 +29,8 @@ type Config struct {
 	Timeout   int
 	Log       bool
 	BrowserFp *fp.Fingerprint
+
+	ReadTimeout, WriteTimeout, MaxIdleConnDuration time.Duration
 }
 
 type RequestOption struct {
