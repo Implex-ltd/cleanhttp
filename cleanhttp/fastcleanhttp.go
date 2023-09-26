@@ -58,15 +58,17 @@ func (c *FastCleanHttp) Do(request RequestOption) ([]byte, int, error) {
 		}
 	}
 
-	b, err := io.ReadAll(request.Body)
-	if err != nil {
-		return nil, 0, err
+	if request.Body != nil {
+		b, err := io.ReadAll(request.Body)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		req.SetBodyRaw(b)
 	}
 
-	req.SetBodyRaw(b)
-
 	resp := fasthttp.AcquireResponse()
-	err = c.Client.Do(req, resp)
+	err := c.Client.Do(req, resp)
 
 	fasthttp.ReleaseRequest(req)
 	defer fasthttp.ReleaseResponse(resp)
