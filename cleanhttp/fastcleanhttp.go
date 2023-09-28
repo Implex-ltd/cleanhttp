@@ -46,9 +46,9 @@ func NewFastCleanHttpClient(config *Config) (*FastCleanHttp, error) {
 	return &c, nil
 }
 
-func (c *FastCleanHttp) Do(request RequestOption) ([]byte, int, error) {
+func (c *FastCleanHttp) Do(request RequestOption) (*fasthttp.Response, error) {
 	if request.Url == "" {
-		return nil, 0, errors.New("please provide valid url")
+		return nil, errors.New("please provide valid url")
 	}
 
 	if request.Header == nil {
@@ -68,7 +68,7 @@ func (c *FastCleanHttp) Do(request RequestOption) ([]byte, int, error) {
 	if request.Body != nil {
 		b, err := io.ReadAll(request.Body)
 		if err != nil {
-			return nil, 0, err
+			return nil, err
 		}
 
 		req.SetBodyRaw(b)
@@ -78,11 +78,10 @@ func (c *FastCleanHttp) Do(request RequestOption) ([]byte, int, error) {
 	err := c.Client.Do(req, resp)
 
 	fasthttp.ReleaseRequest(req)
-	defer fasthttp.ReleaseResponse(resp)
-
 	if err != nil {
-		return nil, 0, err
+		fasthttp.ReleaseResponse(resp)
+		return nil, err
 	}
 
-	return resp.Body(), resp.StatusCode(), nil
+	return resp, nil
 }
