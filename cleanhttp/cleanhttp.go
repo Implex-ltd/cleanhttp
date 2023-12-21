@@ -18,7 +18,7 @@ func NewCleanHttpClient(config *Config) (*CleanHttp, error) {
 	}
 
 	options := []tls_client.HttpClientOption{
-		tls_client.WithClientProfile(profiles.Chrome_117),
+		tls_client.WithClientProfile(profiles.Chrome_120),
 		tls_client.WithInsecureSkipVerify(),
 		tls_client.WithCookieJar(tls_client.NewCookieJar()),
 		tls_client.WithRandomTLSExtensionOrder(),
